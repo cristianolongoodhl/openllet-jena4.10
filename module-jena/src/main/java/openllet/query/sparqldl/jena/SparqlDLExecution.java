@@ -193,13 +193,13 @@ class SparqlDLExecution implements QueryExecution
 	 */
 	void subst(Template template, Set<Triple> acc, Map<Node, Node> bNodeMap, Binding b)
 	{
-		for ( Triple t : template.getTriples() )
-		{
-			t = TemplateLib.subst(t, b, bNodeMap) ;
-			acc.add(t) ;
+		final Iterator<Triple> it = template.getTriples().iterator();
+		while(it.hasNext()) {
+			Triple t = (Triple)it.next();
+			t = TemplateLib.subst(t, b, bNodeMap);
+			acc.add(t);
 		}
 	}
-
 	/**
 	 * {@inheritDoc}
 	 */
