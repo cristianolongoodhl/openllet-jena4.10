@@ -8,23 +8,25 @@
 
 package openllet.test.classification;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.jena.ontology.Individual;
+import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
+import org.apache.jena.reasoner.ValidityReport;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.ReasonerVocabulary;
 
 import openllet.jena.PelletReasonerFactory;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class JenaClassificationTest extends AbstractClassificationTest
 {
@@ -90,6 +92,37 @@ public class JenaClassificationTest extends AbstractClassificationTest
 
 			return stmt.toString();
 		}
+	}
+
+	@Test
+	public void classEqualityTest() throws Exception
+	{
+		final String fileName = "mine-minimal";
+		final String common = "file:" + base + fileName;
+		final String inputOnt = common+".owl";
+		final OntModel premise = ModelFactory.createOntologyModel(PelletReasonerFactory.THE_SPEC);
+		premise.read(inputOnt);
+
+		final String ns = "http://ac.uK/ClassEquality.owl#";
+		//R1 and R2 should be the same
+		final String R1iri = "&MechanicalEngineeringOntology;R1";
+
+		final OntClass R1 = premise.getOntClass(ns+"R1");
+		final OntClass R2 = premise.getOntClass(ns+"R2");
+		final OntClass notR2 = premise.getOntClass(ns+"notR2");
+
+		//thus an individual which belongs to R1 but not to R2 cannot exists
+		final Individual i = premise.createIndividual(ns+"i", R1);
+		i.addOntClass(notR2);
+		final ValidityReport r = premise.validate();
+		assertFalse(r.isValid());
+
+//		premise.prepare();
+//		final StmtIterator stmtIter = premise.listStatements();
+//		for(final Statement s : stmtIter.toList()){
+//			System.out.println(s);
+//		}
+
 	}
 
 }
