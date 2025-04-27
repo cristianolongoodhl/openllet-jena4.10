@@ -308,7 +308,6 @@ class SparqlDLExecution implements QueryExecution
 		_logger.fine("Closing PelletQueryExecution '" + hashCode() + "'.");
 	}
 
-	@Override
 	public void setInitialBinding(final QuerySolution startSolution)
 	{
 		_initialBinding = startSolution;
@@ -430,43 +429,6 @@ class SparqlDLExecution implements QueryExecution
 
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setTimeout(final long arg0)
-	{
-		// not supported yet
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-
-	@Override
-	public void setTimeout(final long arg0, final TimeUnit arg1)
-	{
-		// not supported yet
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setTimeout(final long arg0, final long arg1)
-	{
-		// not supported yet
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setTimeout(final long arg0, final TimeUnit arg1, final long arg2, final TimeUnit arg3)
-	{
-		// not supported yet
-	}
-
 	@Override
 	public boolean isClosed()
 	{
@@ -485,7 +447,6 @@ class SparqlDLExecution implements QueryExecution
 		throw new NotImplemented();
 	}
 
-	@Override
 	public void setInitialBinding(final Binding binding)
 	{
 		// _initialBinding = binding;

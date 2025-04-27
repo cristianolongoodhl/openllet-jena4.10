@@ -19,3 +19,21 @@ InfFindSafeCapabilities in jena 4.2 extends AllCapabilities but overriding to
 false sizeAccurate. Thus, InfFindSafeCapability instantiation has been replaced
 with capabilities created by AllCapabilities.create factory method, with
 sizeAccurate=false.
+
+- openllet.query.sparqldl.jena.SparqlDLResultSet
+Implemented forEachRemaining and provided empty implementation of close.
+
+- openllet.query.sparqldl.jena.SortedResultSet
+Implemented forEachRemaining and provided empty implementation of close.
+
+- openllet.query.sparqldl.jena.SlicedResultSet
+Implemented forEachRemaining and close.
+
+- openllet.test.query.SparqlDLDawgTester.DifferenceResultSet
+Implemented forEachRemaining and provided empty implementation of close.
+
+- openllet.query.sparqldl.jena.SparqlDLExecution
+Implemented the new method getQueryString, but with throwing UnsupportedOperation Exception.
+From the documentation of this: If {@code getQuery()} is not null, this is a corresponding string that parses to the same query.
+Provided an implementation for Template.subst by copy and paste from the Template class in Jena 4.2.
+

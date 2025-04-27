@@ -2,7 +2,6 @@ package openllet.jena.graph.converter;
 
 import java.util.Optional;
 
-import org.apache.jena.graph.BlankNodeId;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.NodeFactory;
@@ -159,7 +158,7 @@ public class AxiomConverter
 																												node = NodeFactory.createBlankNode();
 																											else
 																												if (ATermUtils.isBnode(name))
-																													node = NodeFactory.createBlankNode(new BlankNodeId(((ATermAppl) name.getArgument(0)).getName()));
+																													node = NodeFactory.createBlankNode(((ATermAppl) name.getArgument(0)).getName());
 																												else
 																													node = NodeFactory.createURI(name.getName());
 

@@ -164,21 +164,18 @@ public class SparqlDLExecutionFactory
 			case PELLET:
 				queryExec = new SparqlDLExecution(query, dataset, handleVariableSPO);
 				((SparqlDLExecution) queryExec).setPurePelletQueryExec(true);
+				((SparqlDLExecution) queryExec).setInitialBinding(initialBinding);
 				break;
 			case ARQ:
-				queryExec = QueryExecutionFactory.create(query, dataset);
+				queryExec = QueryExecutionFactory.create(query, dataset, initialBinding);
 				break;
 			case MIXED:
-				queryExec = QueryExecutionFactory.create(query, dataset);
+				queryExec = QueryExecutionFactory.create(query, dataset, initialBinding);
 				queryExec.getContext().set(ARQ.stageGenerator, new SparqlDLStageGenerator(handleVariableSPO));
 				break;
 			default:
 				throw new AssertionError();
 		}
-
-		// if given set the initial binding
-		if (initialBinding != null)
-			queryExec.setInitialBinding(initialBinding);
 
 		// return it
 		return queryExec;

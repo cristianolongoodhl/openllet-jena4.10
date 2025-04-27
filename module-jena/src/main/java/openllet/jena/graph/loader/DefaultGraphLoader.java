@@ -52,11 +52,11 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.jena.graph.Factory;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.rdf.model.Property;
+import org.apache.jena.sparql.graph.GraphFactory;
 import org.apache.jena.util.iterator.ClosableIterator;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
@@ -142,7 +142,7 @@ public class DefaultGraphLoader implements GraphLoader
 
 	private static final EnumSet<BuiltinTerm> OWL_MEMBERS_TYPES = EnumSet.of(BuiltinTerm.OWL_AllDifferent, BuiltinTerm.OWL2_AllDisjointClasses, BuiltinTerm.OWL2_AllDisjointProperties);
 
-	private static final Graph EMPTY_GRAPH = Factory.createGraphMem();
+	private static final Graph EMPTY_GRAPH = GraphFactory.createGraphMem();
 
 	public static QNameProvider _qnames = new QNameProvider();
 
@@ -1226,7 +1226,7 @@ public class DefaultGraphLoader implements GraphLoader
 	}
 
 	/**
-	 * Process all triples with <code>rdf:type</code> predicate. If {@link PelletOptions#PREPROCESS_TYPE_TRIPLES} option is <code>true</code> this function is a
+	 * Process all triples with <code>rdf:type</code> predicate. If PelletOptions#PREPROCESS_TYPE_TRIPLES option is <code>true</code> this function is a
 	 * noop.
 	 */
 	protected void processTypes()
@@ -1243,7 +1243,7 @@ public class DefaultGraphLoader implements GraphLoader
 	}
 
 	/**
-	 * Process triples with <code>rdf:type</code> predicate and given object. Type can be {@link Node.ANY} to indicate all type triples should be processed.
+	 * Process triples with <code>rdf:type</code> predicate and given object. Type can be Node.ANY to indicate all type triples should be processed.
 	 *
 	 * @param type the object of <code>rdf:type</code> triples to be processed
 	 */
@@ -1437,7 +1437,7 @@ public class DefaultGraphLoader implements GraphLoader
 	}
 
 	/**
-	 * Process all the triples in the raw _graph. If {@link PelletOptions#PREPROCESS_TYPE_TRIPLES} option is <code>true</code> all <code>rdf:type</code> will be
+	 * Process all the triples in the raw _graph. If PelletOptions#PREPROCESS_TYPE_TRIPLES option is <code>true</code> all <code>rdf:type</code> will be
 	 * ignored since they have already been processed with {@link #processTypes()} function.
 	 */
 	protected void processTriples()
@@ -1451,7 +1451,7 @@ public class DefaultGraphLoader implements GraphLoader
 	}
 
 	/**
-	 * Process triples with the given predicate. Predicate can be {@link Node.ANY} to indicate all triples should be processed.
+	 * Process triples with the given predicate. Predicate can be Node.ANY to indicate all triples should be processed.
 	 *
 	 * @param predicate Predicate of the triples that will be processed
 	 */
@@ -1469,7 +1469,7 @@ public class DefaultGraphLoader implements GraphLoader
 	/**
 	 * Process a single triple that corresponds to an axiom (or a fact). This means triples that are part of OWL syntax, e.g. a triple with
 	 * <code>owl:onProperty</code> predicate, will not be processed since they are handled by the {@link #node2term(Node)} function. Also, if
-	 * {@link PelletOptions#PREPROCESS_TYPE_TRIPLES} option is <code>true</code> any triple with <code>rdf:type</code> predicate will be ignored.
+	 * PelletOptions#PREPROCESS_TYPE_TRIPLES option is <code>true</code> any triple with <code>rdf:type</code> predicate will be ignored.
 	 *
 	 * @param triple Triple to be processed.
 	 */

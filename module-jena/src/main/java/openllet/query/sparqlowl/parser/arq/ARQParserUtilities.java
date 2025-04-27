@@ -103,8 +103,8 @@ public class ARQParserUtilities
 			final Node oldList = list;
 			final Node first = nodes.get(i);
 			list = NodeFactory.createBlankNode();
-			triples.add(new Triple(list, RDF.Nodes.first, first));
-			triples.add(new Triple(list, RDF.Nodes.rest, oldList));
+			triples.add(Triple.create(list, RDF.Nodes.first, first));
+			triples.add(Triple.create(list, RDF.Nodes.rest, oldList));
 		}
 		return list;
 	}

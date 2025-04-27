@@ -38,7 +38,6 @@ import java.util.function.Predicate;
 import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.TypeMapper;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
-import org.apache.jena.graph.BlankNodeId;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.graph.impl.LiteralLabel;
@@ -138,13 +137,13 @@ public class JenaUtils
 		if (datatype.equals(ATermUtils.PLAIN_LITERAL_DATATYPE))
 		{
 			if (lang.equals(ATermUtils.EMPTY))
-				node = NodeFactory.createLiteral(lexicalValue);
+				node = NodeFactory.createLiteralString(lexicalValue);
 			else
-				node = NodeFactory.createLiteral(lexicalValue, lang.getName(), false);
+				node = NodeFactory.createLiteralLang(lexicalValue, lang.getName());
 		}
 		else
 			if (datatype.equals(Datatypes.XML_LITERAL))
-				node = NodeFactory.createLiteral(lexicalValue, "", true);
+				node = NodeFactory.createLiteralLang(lexicalValue, "");
 			else
 			{
 				final RDFDatatype type = TypeMapper.getInstance().getTypeByName(datatype.getName());
@@ -157,7 +156,7 @@ public class JenaUtils
 	static public Node makeGraphResource(final ATermAppl term)
 	{
 		if (ATermUtils.isBnode(term))
-			return NodeFactory.createBlankNode(new BlankNodeId(((ATermAppl) term.getArgument(0)).getName()));
+			return NodeFactory.createBlankNode(((ATermAppl) term.getArgument(0)).getName());
 		else
 			if (term.equals(ATermUtils.TOP))
 				return OWL.Thing.asNode();

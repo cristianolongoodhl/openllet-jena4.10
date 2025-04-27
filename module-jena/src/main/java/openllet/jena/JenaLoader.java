@@ -10,6 +10,8 @@ package openllet.jena;
 
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.util.FileManager;
 
 import openllet.core.KBLoader;
@@ -27,7 +29,6 @@ import openllet.core.KnowledgeBase;
  */
 public class JenaLoader extends KBLoader
 {
-	private static final FileManager _manager = FileManager.get();
 
 	private OntModel _model;
 
@@ -72,7 +73,10 @@ public class JenaLoader extends KBLoader
 	@Override
 	protected void parseFile(final String file)
 	{
-		_manager.readModel(_model, file, _inputFormat);
+		if (_inputFormat!=null)
+			RDFDataMgr.read(_model, file, RDFLanguages.nameToLang(_inputFormat));
+		else
+			RDFDataMgr.read(_model, file);
 	}
 
 	/**
