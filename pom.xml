@@ -69,7 +69,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <asmVersion>8.0.1</asmVersion>
-    <org.apache.jena.version>5.2.0</org.apache.jena.version>
+    <org.apache.jena.version>5.4.0</org.apache.jena.version>
   </properties>
 
   <prerequisites>

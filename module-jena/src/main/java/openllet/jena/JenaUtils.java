@@ -38,6 +38,7 @@ import java.util.function.Predicate;
 import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.TypeMapper;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.jena.datatypes.xsd.impl.XMLLiteralType;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.graph.impl.LiteralLabel;
@@ -143,7 +144,7 @@ public class JenaUtils
 		}
 		else
 			if (datatype.equals(Datatypes.XML_LITERAL))
-				node = NodeFactory.createLiteralLang(lexicalValue, "");
+				node = NodeFactory.createLiteral(lexicalValue, "", XMLLiteralType.rdfXMLLiteral);
 			else
 			{
 				final RDFDatatype type = TypeMapper.getInstance().getTypeByName(datatype.getName());
