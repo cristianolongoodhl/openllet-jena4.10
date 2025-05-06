@@ -36,6 +36,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import org.apache.jena.graph.Graph;
+import org.apache.jena.graph.GraphMemFactory;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.rdf.model.Model;
@@ -92,7 +93,7 @@ public class PelletInfGraph extends BaseInfGraph
 
 	public PelletInfGraph(final KnowledgeBase kb, final PelletReasoner pellet, final GraphLoader loader)
 	{
-		this(kb, GraphFactory.createDefaultGraph(), pellet, loader);
+		this(kb, GraphMemFactory.createGraphMem(), pellet, loader);
 	}
 
 	public PelletInfGraph(final Graph graph, final PelletReasoner pellet, final GraphLoader loader)
@@ -382,7 +383,7 @@ public class PelletInfGraph extends BaseInfGraph
 
 		prepare();
 
-		final Graph explanationGraph = GraphFactory.createDefaultGraph();
+		final Graph explanationGraph = GraphMemFactory.createGraphMem();
 
 		_logger.fine(() -> "Explain " + pattern);
 

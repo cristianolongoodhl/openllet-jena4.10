@@ -8,12 +8,10 @@
 
 package openllet.test.classification;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.jena.graph.GraphMemFactory;
 import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Model;
@@ -25,6 +23,9 @@ import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.ReasonerVocabulary;
 
 import openllet.jena.PelletReasonerFactory;
+import org.jgrapht.generate.GraphGenerator;
+
+import static org.junit.Assert.*;
 
 public class JenaClassificationTest extends AbstractClassificationTest
 {
@@ -33,7 +34,7 @@ public class JenaClassificationTest extends AbstractClassificationTest
 	{
 		final OntModel premise = ModelFactory.createOntologyModel(PelletReasonerFactory.THE_SPEC);
 		premise.read(inputOnt);
-		premise.prepare();
+		//premise.prepare();
 
 		final Model conclusion = ModelFactory.createDefaultModel();
 		conclusion.read(classifiedOnt);
