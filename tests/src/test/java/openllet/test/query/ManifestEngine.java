@@ -24,6 +24,7 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
+import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.sparql.vocabulary.EARL;
 import org.apache.jena.sparql.vocabulary.FOAF;
 import org.apache.jena.util.FileManager;
@@ -228,7 +229,7 @@ public class ManifestEngine
 			final Model model = ModelFactory.createDefaultModel();
 
 			final URI uri = URI.create(manifestURI);
-			FileManager.get().readModel(model, uri.toString());
+			RDFDataMgr.read(model, uri.toString());
 
 			final StmtIterator i = model.listStatements(null, RDF.type, SparqlDawgTestVocabulary.Manifest);
 			while (i.hasNext())

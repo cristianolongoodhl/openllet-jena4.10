@@ -10,7 +10,7 @@ package openllet.jena;
 
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.util.FileManager;
+import org.apache.jena.riot.RDFDataMgr;
 
 import openllet.core.KBLoader;
 import openllet.core.KnowledgeBase;
@@ -27,8 +27,6 @@ import openllet.core.KnowledgeBase;
  */
 public class JenaLoader extends KBLoader
 {
-	private static final FileManager _manager = FileManager.get();
-
 	private OntModel _model;
 
 	private PelletInfGraph _pellet;
@@ -72,7 +70,7 @@ public class JenaLoader extends KBLoader
 	@Override
 	protected void parseFile(final String file)
 	{
-		_manager.readModel(_model, file, _inputFormat);
+		RDFDataMgr.read(_model, file);
 	}
 
 	/**

@@ -11,6 +11,7 @@ import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
+import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.util.FileManager;
 
 /**
@@ -38,7 +39,7 @@ public class RDFModelReader
 		final OntModel model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
 		model.getDocumentManager().setProcessImports(loadImports);
 
-		FileManager.get().readModel(model, uri);
+		RDFDataMgr.read(model, uri);
 
 		final StmtIterator stmtIter = model.listStatements();
 

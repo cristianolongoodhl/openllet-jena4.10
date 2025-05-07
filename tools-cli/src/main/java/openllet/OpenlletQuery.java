@@ -29,6 +29,7 @@ import org.apache.jena.query.ResultSetFormatter;
 import org.apache.jena.query.Syntax;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.shared.NotFoundException;
 import org.apache.jena.util.FileManager;
 
@@ -285,6 +286,7 @@ public class OpenlletQuery extends OpenlletCmdApp
 			startTask("parsing query file");
 
 			queryString = FileManager.get().readWholeFileAsUTF8(queryFile);
+//			queryString = RDFDataMgr.read(queryFile);
 			query = QueryFactory.create(queryString, queryFormat);
 
 			finishTask("parsing query file");

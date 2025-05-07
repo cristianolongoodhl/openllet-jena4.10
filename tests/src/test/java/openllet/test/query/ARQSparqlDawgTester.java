@@ -29,6 +29,7 @@ import org.apache.jena.query.ResultSetFactory;
 import org.apache.jena.query.ResultSetFormatter;
 import org.apache.jena.query.ResultSetRewindable;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.util.FileManager;
 
 import openllet.atom.OpenError;
@@ -182,7 +183,7 @@ public class ARQSparqlDawgTester implements SparqlDawgTester
 					if (_query.isConstructType())
 					{
 						final Model real = exec.execConstruct();
-						final Model expected = FileManager.get().loadModel(_resultURI);
+						final Model expected =  RDFDataMgr.loadModel(_resultURI);
 
 						_logger.fine("Expected=" + real);
 						_logger.fine("Real=" + expected);
@@ -193,7 +194,7 @@ public class ARQSparqlDawgTester implements SparqlDawgTester
 						if (_query.isDescribeType())
 						{
 							final Model real = exec.execDescribe();
-							final Model expected = FileManager.get().loadModel(_resultURI);
+							final Model expected = RDFDataMgr.loadModel(_resultURI);
 
 							_logger.fine("Expected=" + real);
 							_logger.fine("Real=" + expected);

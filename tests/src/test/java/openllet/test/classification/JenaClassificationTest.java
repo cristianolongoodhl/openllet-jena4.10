@@ -11,7 +11,6 @@ package openllet.test.classification;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.jena.graph.GraphMemFactory;
 import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Model;

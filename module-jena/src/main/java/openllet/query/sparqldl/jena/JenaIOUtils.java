@@ -13,6 +13,7 @@ import java.net.URI;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFactory;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.ResultSetMgr;
 import org.apache.jena.riot.resultset.ResultSetLang;
 import org.apache.jena.sparql.resultset.ResultsFormat;
@@ -81,7 +82,7 @@ public class JenaIOUtils
 			}
 		else
 			if (resultURI.endsWith("ttl") || resultURI.endsWith("rdf"))
-				return FileManager.get().loadModel(resultURI.substring(5)).getProperty(null, ResourceFactory.createProperty("http://www.w3.org/2001/sw/DataAccess/tests/result-set#boolean")).getBoolean();
+				return RDFDataMgr.loadModel(resultURI.substring(5)).getProperty(null, ResourceFactory.createProperty("http://www.w3.org/2001/sw/DataAccess/tests/result-set#boolean")).getBoolean();
 			else
 				throw new OpenError("Unknown format.");
 	}

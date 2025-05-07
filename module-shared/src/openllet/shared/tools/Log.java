@@ -25,7 +25,7 @@ public class Log implements Logging
 		{
 			final StringBuffer buff = new StringBuffer();
 			buff.append(record.getLevel()).append(' ');
-			buff.append(record.getThreadID()).append(' ');
+			buff.append(record.getLongThreadID()).append(' ');
 			buff.append(record.getLoggerName()).append(' ');
 			buff.append(record.getMessage()).append(' ');
 			System.out.println(buff.toString());

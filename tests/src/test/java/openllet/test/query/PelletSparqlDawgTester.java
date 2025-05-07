@@ -18,6 +18,7 @@ import org.apache.jena.query.Dataset;
 import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.util.FileUtils;
 
@@ -84,7 +85,7 @@ public class PelletSparqlDawgTester extends ARQSparqlDawgTester
 		for (final String graphURI : namedGraphURIs)
 		{
 			model = ModelFactory.createOntologyModel(PelletReasonerFactory.THE_SPEC);
-			FileManager.get().readModel(model, graphURI);
+			RDFDataMgr.read(model, graphURI);
 			dataset.addNamedModel(graphURI, model);
 		}
 
