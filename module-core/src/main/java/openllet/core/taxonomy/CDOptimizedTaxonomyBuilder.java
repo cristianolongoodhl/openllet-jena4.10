@@ -27,6 +27,7 @@ import openllet.aterm.ATermAppl;
 import openllet.aterm.ATermList;
 import openllet.atom.OpenError;
 import openllet.core.KnowledgeBase;
+import openllet.core.KnowledgeBaseImpl;
 import openllet.core.OpenlletOptions;
 import openllet.core.boxes.abox.Individual;
 import openllet.core.boxes.rbox.Role;
@@ -148,6 +149,8 @@ public class CDOptimizedTaxonomyBuilder implements TaxonomyBuilder
 	@Override
 	synchronized public boolean classify()
 	{
+		System.out.println("******** CDOptimizedTaxonomyBuilder.classify begin");
+
 		_classes = _kb.getClasses();
 
 		int classCount = _classes.size();
@@ -181,6 +184,8 @@ public class CDOptimizedTaxonomyBuilder implements TaxonomyBuilder
 
 		if (_useCD)
 		{
+			System.out.println("******** CDOptimizedTaxonomyBuilder.classify concept flags "+_conceptFlags);
+
 			final List<ATermAppl> phase1List = new ArrayList<>();
 			final List<ATermAppl> phase2List = new ArrayList<>();
 			for (final ATermAppl c : getDefinitionOrder())
@@ -376,35 +381,35 @@ public class CDOptimizedTaxonomyBuilder implements TaxonomyBuilder
 		if (!_useCD)
 			return;
 
+		System.out.println("******** CDOptimizedTaxonomyBuilder.computeConceptFlags roles "+_kb.getRBox().getRoles().values());
+
 		/*
 		 * Use RBox domain axioms to _mark some concepts as complex
 		 */
 		for (final Role r : _kb.getRBox().getRoles().values())
-			for (final ATermAppl c : r.getDomains())
-				if (ATermUtils.isPrimitive(c))
+			for (final ATermAppl c : r.getDomains()) {
+				if (ATermUtils.isPrimitive(c)){
 					_conceptFlags.put(c, ConceptFlag.OTHER);
-				else
-					if (ATermUtils.isAnd(c))
-					{
-						ATermList list = (ATermList) c.getArgument(0);
-						for (; !list.isEmpty(); list = list.getNext())
-						{
-							final ATermAppl d = (ATermAppl) list.getFirst();
-							if (ATermUtils.isPrimitive(d))
-								_conceptFlags.put(d, ConceptFlag.OTHER);
+				}
+				else if (ATermUtils.isAnd(c)) {
+					ATermList list = (ATermList) c.getArgument(0);
+					for (; !list.isEmpty(); list = list.getNext()) {
+						final ATermAppl d = (ATermAppl) list.getFirst();
+						if (ATermUtils.isPrimitive(d))
+							_conceptFlags.put(d, ConceptFlag.OTHER);
+					}
+				} else if (ATermUtils.isNot(c) && ATermUtils.isAnd((ATermAppl) c.getArgument(0))) {
+					ATermList list = (ATermList) ((ATermAppl) c.getArgument(0)).getArgument(0);
+					for (; !list.isEmpty(); list = list.getNext()) {
+						final ATermAppl d = (ATermAppl) list.getFirst();
+						if (ATermUtils.isNegatedPrimitive(d)) {
+							_conceptFlags.put((ATermAppl) d.getArgument(0), ConceptFlag.OTHER);
+							System.out.println("******** CDOptimizedTaxonomyBuilder eccolo negated argument "+d);
 						}
 					}
-					else
-						if (ATermUtils.isNot(c) && ATermUtils.isAnd((ATermAppl) c.getArgument(0)))
-						{
-							ATermList list = (ATermList) ((ATermAppl) c.getArgument(0)).getArgument(0);
-							for (; !list.isEmpty(); list = list.getNext())
-							{
-								final ATermAppl d = (ATermAppl) list.getFirst();
-								if (ATermUtils.isNegatedPrimitive(d))
-									_conceptFlags.put((ATermAppl) d.getArgument(0), ConceptFlag.OTHER);
-							}
-						}
+				}
+			}
+		System.out.println("******** CDOptimizedTaxonomyBuilder Concept flags after role processing "+_conceptFlags);
 
 		/*
 		 * Iterate over the post-absorption unfolded class descriptions to set
@@ -431,6 +436,7 @@ public class CDOptimizedTaxonomyBuilder implements TaxonomyBuilder
 				}
 				continue;
 			}
+//			System.out.println("******** CDOptimizedTaxonomyBuilder Concept flags after tbox processing "+_conceptFlags);
 
 			boolean flagged = false;
 			for (final ATermAppl sup : _toldTaxonomy.getFlattenedSupers(c, /* direct = */true))
@@ -455,6 +461,8 @@ public class CDOptimizedTaxonomyBuilder implements TaxonomyBuilder
 
 			_conceptFlags.put(c, isCDDesc(unfoldingList) ? ConceptFlag.COMPLETELY_DEFINED : ConceptFlag.PRIMITIVE);
 		}
+
+		System.out.println("******** CDOptimizedTaxonomyBuilder Concept flags after tbox processing "+_conceptFlags);
 
 		if (_logger.isLoggable(Level.FINE))
 		{
@@ -761,10 +769,11 @@ public class CDOptimizedTaxonomyBuilder implements TaxonomyBuilder
 		if (_logger.isLoggable(Level.FINER) && timer.isPresent())
 			_logger.finer((isSatisfiable ? "true" : "*****FALSE*****") + " (" + timer.get().getLast() + "ms)");
 
-		if (!isSatisfiable)
+		if (!isSatisfiable) {
 			_taxonomyImpl.addEquivalentNode(c, _taxonomyImpl.getBottomNode());
+		}
 
-		if (OpenlletOptions.USE_CACHING)
+			if (OpenlletOptions.USE_CACHING)
 		{
 			if (_logger.isLoggable(Level.FINER))
 				_logger.finer("...negation ");
@@ -795,6 +804,8 @@ public class CDOptimizedTaxonomyBuilder implements TaxonomyBuilder
 
 	private TaxonomyNode<ATermAppl> classify(final ATermAppl c, final boolean requireTopSearch)
 	{
+		System.out.println("******** CDOptimizedTaxonomyBuilder.classify(term"+c+", requireTopSearch="+requireTopSearch);
+
 		boolean skipTopSearch;
 		boolean skipBottomSearch;
 

@@ -35,10 +35,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import org.apache.jena.graph.Factory;
-import org.apache.jena.graph.Graph;
-import org.apache.jena.graph.Node;
-import org.apache.jena.graph.Triple;
+import org.apache.jena.graph.*;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
@@ -324,10 +321,10 @@ public class PelletInfGraph extends BaseInfGraph
 	@Override
 	protected boolean graphBaseContains(final Triple pattern)
 	{
-		if (getRawGraph().contains(pattern))
-			return true;
-
-		return containsTriple(pattern);
+		System.out.println("******** PelletInfGraph:graphBaseContains begin "+pattern);
+		boolean result=getRawGraph().contains(pattern) ? true : containsTriple(pattern);
+		System.out.println("******** PelletInfGraph:graphBaseContains ("+result+") "+pattern);
+		return result;
 	}
 
 	public boolean entails(final Triple pattern)

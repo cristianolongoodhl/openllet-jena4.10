@@ -265,12 +265,16 @@ public class RBoxImpl implements RBox
 			final Set<ATermAppl> explanation = e.getValue().iterator().next();
 			final ATermAppl domain = e.getKey();
 			final ATermAppl normalized = ATermUtils.normalize(domain);
+			System.out.println("******** RBoxImpl propagateDomain: processing subroles of "+e.getKey());
 
 			for (final Role s : role.getSubRoles())
 			{
+				System.out.println("******** RBoxImpl propagateDomain for subrole "+s);
+
 				final DependencySet explainSub = role.getExplainSub(s.getName());
 				final DependencySet ds = explainSub.union(explanation, true);
 
+				System.out.println("******** RBoxImpl propagateDomain for subrole "+s);
 				s.addDomain(normalized, ds);
 			}
 		}

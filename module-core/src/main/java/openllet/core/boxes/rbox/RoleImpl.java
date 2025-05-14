@@ -350,6 +350,8 @@ public class RoleImpl implements Role
 	@Override
 	public boolean addDomain(final ATermAppl a, final DependencySet ds)
 	{
+		System.out.println("******** RoleImpl.addDomain role "+this+"; term "+a);
+
 		if (_domains.isEmpty())
 			_domains = CollectionUtils.makeMap();
 

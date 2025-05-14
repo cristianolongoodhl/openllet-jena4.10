@@ -52,6 +52,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import openllet.core.KnowledgeBaseImpl;
 import org.apache.jena.graph.Factory;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.Node;
@@ -363,6 +364,7 @@ public class DefaultGraphLoader implements GraphLoader
 	// OWL2.SelfRestriction is deprecated but we have control over it.
 	protected ATermAppl createRestriction(final Node node) throws UnsupportedFeatureException
 	{
+		((KnowledgeBaseImpl)_kb).print("DefaultGraphLoader.createRestriction "+node);
 		Node restrictionType = null;
 		Node p = null;
 		Node filler = null;
@@ -492,10 +494,13 @@ public class DefaultGraphLoader implements GraphLoader
 				else
 					if (restrictionType.equals(OWL.someValuesFrom.asNode()))
 					{
+						((KnowledgeBaseImpl)_kb).print("DefaultGraphLoader.createRestriction someValuesFrom before node2term "+filler);
 						final ATermAppl ot = node2term(filler);
+						((KnowledgeBaseImpl)_kb).print("DefaultGraphLoader.createRestriction someValuesFrom "+ot+" is a class "+_kb.isClass(ot));
 
-						if (_kb.isClass(ot))
+						if (_kb.isClass(ot)) {
 							defineObjectProperty(pt);
+						}
 						else
 							if (_kb.isDatatype(ot))
 								defineDatatypeProperty(pt);
@@ -564,6 +569,7 @@ public class DefaultGraphLoader implements GraphLoader
 	@Override
 	public ATermAppl node2term(final Node node)
 	{
+		((KnowledgeBaseImpl)_kb).print("node2term "+node);
 		ATermAppl aTerm = _terms.get(node);
 
 		if (aTerm == null)
@@ -1082,6 +1088,7 @@ public class DefaultGraphLoader implements GraphLoader
 
 	protected boolean defineClass(final ATermAppl c)
 	{
+		((KnowledgeBaseImpl)_kb).print("DefaultGraphLoader.defineClass("+c+")");
 		if (ATermUtils.isPrimitive(c))
 		{
 			_kb.addClass(c);
@@ -1151,10 +1158,14 @@ public class DefaultGraphLoader implements GraphLoader
 
 	protected boolean defineObjectProperty(final ATermAppl c)
 	{
+		System.out.println("DefaultGraphLoader.defineObjectProperty("+c+") isPrimitive "+ATermUtils.isPrimitive(c));
 		if (!ATermUtils.isPrimitive(c) && !ATermUtils.isInv(c))
 			return false;
 
-		return _kb.addObjectProperty(c);
+		((KnowledgeBaseImpl)_kb).printRbox("DefaultGraphLoader.defineObjectProperty("+c+") before");
+		boolean result= _kb.addObjectProperty(c);
+		((KnowledgeBaseImpl)_kb).printRbox("DefaultGraphLoader.defineObjectProperty("+c+") after");
+		return result;
 	}
 
 	protected boolean defineDatatypeProperty(final ATermAppl c)
@@ -1443,8 +1454,10 @@ public class DefaultGraphLoader implements GraphLoader
 	protected void processTriples()
 	{
 		_logger.fine("processTriples");
-		if (isLoadABox())
+		if (isLoadABox()) {
+			((KnowledgeBaseImpl)_kb).print("DefaultGraphLoader.processTriples ANY");
 			processTriples(Node.ANY);
+		}
 		else
 			for (final Node predicate : TBOX_PREDICATES)
 				processTriples(predicate);
@@ -1458,9 +1471,11 @@ public class DefaultGraphLoader implements GraphLoader
 	protected void processTriples(final Node predicate)
 	{
 		final ClosableIterator<Triple> i = _graph.find(null, predicate, null);
+		((KnowledgeBaseImpl)_kb).print("DefaultGraphLoader.processTriples(predicate="+predicate+") graph "+_graph.getClass().getName());
 		while (i.hasNext())
 		{
 			final Triple triple = i.next();
+			((KnowledgeBaseImpl)_kb).print("DefaultGraphLoader.processTriples triple "+triple);
 			processTriple(triple);
 		}
 		i.close();

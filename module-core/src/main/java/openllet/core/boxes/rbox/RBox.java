@@ -593,19 +593,25 @@ public interface RBox extends Logging
 
 		for (final Role role : getRoles().values())
 		{
+			System.out.println("******** RBox.propagateDomainRange for role "+role);
 			final Role invRole = role.getInverse();
+			System.out.println("******** RBox.propagateDomainRange inverse "+invRole);
 			if (invRole != null)
 			{
 				final Map<ATermAppl, Set<Set<ATermAppl>>> invDomains = getDomainAssertions().get(invRole);
 				final Map<ATermAppl, Set<Set<ATermAppl>>> invRanges = getRangeAssertions().get(invRole);
 
+				System.out.println("******** RBox.propagateDomainRange inverse "+invRole+" calling propagateDomain");
 				propogateDomain(role, invRanges);
+				System.out.println("******** RBox.propagateDomainRange inverse "+invRole+" calling propagateRange");
 				propogateRange(role, invDomains);
 			}
 
 			final Map<ATermAppl, Set<Set<ATermAppl>>> domains = getDomainAssertions().get(role);
 			final Map<ATermAppl, Set<Set<ATermAppl>>> ranges = getRangeAssertions().get(role);
+			System.out.println("******** RBox.propagateDomainRange "+role+" calling propagateDomain");
 			propogateDomain(role, domains);
+			System.out.println("******** RBox.propagateDomainRange "+role+" calling propagateRange");
 			propogateRange(role, ranges);
 		}
 	}
