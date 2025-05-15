@@ -569,7 +569,6 @@ public class DefaultGraphLoader implements GraphLoader
 	@Override
 	public ATermAppl node2term(final Node node)
 	{
-		((KnowledgeBaseImpl)_kb).print("node2term "+node);
 		ATermAppl aTerm = _terms.get(node);
 
 		if (aTerm == null)
@@ -1162,9 +1161,9 @@ public class DefaultGraphLoader implements GraphLoader
 		if (!ATermUtils.isPrimitive(c) && !ATermUtils.isInv(c))
 			return false;
 
-		((KnowledgeBaseImpl)_kb).printRbox("DefaultGraphLoader.defineObjectProperty("+c+") before");
+		((KnowledgeBaseImpl)_kb).print("DefaultGraphLoader.defineObjectProperty("+c+") before");
 		boolean result= _kb.addObjectProperty(c);
-		((KnowledgeBaseImpl)_kb).printRbox("DefaultGraphLoader.defineObjectProperty("+c+") after");
+		((KnowledgeBaseImpl)_kb).print("DefaultGraphLoader.defineObjectProperty("+c+") after");
 		return result;
 	}
 
@@ -2093,6 +2092,9 @@ public class DefaultGraphLoader implements GraphLoader
 			_graph = g;
 			processTriples();
 		}
+
+		((KnowledgeBaseImpl)_kb).printRBox("DefaultGraphLoader.load after process triples");
+		((KnowledgeBaseImpl)_kb).printTBox("DefaultGraphLoader.load after process triples");
 
 		processUntypedResources();
 

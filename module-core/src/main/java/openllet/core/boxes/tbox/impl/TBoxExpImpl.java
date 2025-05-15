@@ -279,6 +279,7 @@ public class TBoxExpImpl implements TBox
 
 	protected boolean addAxiom(final ATermAppl axiom, final Set<ATermAppl> explain, final boolean forceAddition)
 	{
+		System.out.println("* TBoxExpImpl.addAxiom "+axiom);
 		final boolean added = addAxiomExplanation(axiom, explain);
 
 		if (added || forceAddition)
@@ -550,6 +551,16 @@ public class TBoxExpImpl implements TBox
 	@Override
 	public Iterator<Unfolding> unfold(final ATermAppl c)
 	{
+		if (c.equals(TOP)){
+			System.out.println("*** TBoxExpImpl(TOP) _Tu");
+			for(Unfolding f: _Tu.unfold(c)){
+				System.out.println(" * "+f);
+			}
+			System.out.println("*** TBoxExpImpl(TOP) _Tg.getUC");
+			for(Unfolding f: _Tg.getUC()){
+				System.out.println(" * "+f);
+			}
+		}
 		final MultiIterator<Unfolding> result = new MultiIterator<>(_Tu.unfold(c).iterator());
 		if (c.equals(TOP) && !_Tg.getUC().isEmpty())
 			result.append(_Tg.getUC().iterator());

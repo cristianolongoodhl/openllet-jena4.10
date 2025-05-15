@@ -68,6 +68,7 @@ public class TuBox extends TBoxBase
 	@Override
 	public boolean addDef(final ATermAppl axiom)
 	{
+		System.out.println("* TuBox.addDef "+axiom);
 		boolean added = false;
 
 		final ATermAppl name = (ATermAppl) axiom.getArgument(0);
@@ -265,6 +266,7 @@ public class TuBox extends TBoxBase
 					return false;
 		}
 
+		System.out.println("addIfUnfoldable");
 		return addDef(term);
 	}
 

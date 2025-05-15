@@ -149,7 +149,7 @@ public class CDOptimizedTaxonomyBuilder implements TaxonomyBuilder
 	@Override
 	synchronized public boolean classify()
 	{
-		System.out.println("******** CDOptimizedTaxonomyBuilder.classify begin");
+		((KnowledgeBaseImpl)_kb).print("CDOptimizedTaxonomyBuilder.classify begin");
 
 		_classes = _kb.getClasses();
 
@@ -165,6 +165,7 @@ public class CDOptimizedTaxonomyBuilder implements TaxonomyBuilder
 
 		if (_classes.isEmpty())
 		{
+			((KnowledgeBaseImpl)_kb).print("CDOptimizedTaxonomyBuilder.classify Classes is empty!");
 			_taxonomyImpl = new TaxonomyImpl<>(null, ATermUtils.TOP, ATermUtils.BOTTOM);
 			return true;
 		}
@@ -182,9 +183,10 @@ public class CDOptimizedTaxonomyBuilder implements TaxonomyBuilder
 
 		List<ATermAppl> phase1, phase2;
 
+		((KnowledgeBaseImpl)_kb).print("CDOptimizedTaxonomyBuilder.classify _useCD="+_useCD);
 		if (_useCD)
 		{
-			System.out.println("******** CDOptimizedTaxonomyBuilder.classify concept flags "+_conceptFlags);
+			((KnowledgeBaseImpl)_kb).print("CDOptimizedTaxonomyBuilder.classify concept flags "+_conceptFlags);
 
 			final List<ATermAppl> phase1List = new ArrayList<>();
 			final List<ATermAppl> phase2List = new ArrayList<>();
@@ -307,7 +309,14 @@ public class CDOptimizedTaxonomyBuilder implements TaxonomyBuilder
 
 	protected void reset()
 	{
+		((KnowledgeBaseImpl)_kb).print("CDOptimizedTaxonomyBuilder.reset before prepare");
+		((KnowledgeBaseImpl)_kb).print("CDOptimizedTaxonomyBuilder.reset _kb.getTBox() "+_kb.getTBox().getClass().getName());
+		((KnowledgeBaseImpl)_kb).print("CDOptimizedTaxonomyBuilder.reset _kb.getTBox().unfold(ATermUtils.TOP).hasNext() "+_kb.getTBox().unfold(ATermUtils.TOP).hasNext());
+		((KnowledgeBaseImpl)_kb).print("CDOptimizedTaxonomyBuilder.reset _kb.getExpressivity().hasNominal() "+_kb.getExpressivity().hasNominal());
 		_kb.prepare();
+		((KnowledgeBaseImpl)_kb).print("CDOptimizedTaxonomyBuilder.reset after prepare");
+		((KnowledgeBaseImpl)_kb).print("CDOptimizedTaxonomyBuilder.reset _kb.getTBox().unfold(ATermUtils.TOP).hasNext() "+_kb.getTBox().unfold(ATermUtils.TOP).hasNext());
+		((KnowledgeBaseImpl)_kb).print("CDOptimizedTaxonomyBuilder.reset _kb.getExpressivity().hasNominal() "+_kb.getExpressivity().hasNominal());
 		_classes = new ArrayList<>(_kb.getClasses());
 		_useCD = OpenlletOptions.USE_CD_CLASSIFICATION && !_kb.getTBox().unfold(ATermUtils.TOP).hasNext() && !_kb.getExpressivity().hasNominal();
 		init();

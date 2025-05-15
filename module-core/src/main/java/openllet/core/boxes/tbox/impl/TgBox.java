@@ -86,8 +86,10 @@ public class TgBox extends TBoxBase
 
 		for (final TermDefinition termDef : _termhash.values())
 		{
+			System.out.println("* TgBox internalize term "+termDef);
 			for (final ATermAppl subClassAxiom : termDef.getSubClassAxioms())
 			{
+				System.out.println("** TgBox internalize subclass axiom "+subClassAxiom);
 				final ATermAppl c1 = (ATermAppl) subClassAxiom.getArgument(0);
 				final ATermAppl c2 = (ATermAppl) subClassAxiom.getArgument(1);
 				final ATermAppl notC1 = ATermUtils.makeNot(c1);
@@ -367,8 +369,10 @@ public class TgBox extends TBoxBase
 
 	private boolean absorbII(final Set<ATermAppl> set)
 	{
+		System.out.println("* TgBox.absorbII begin");
 		for (final ATermAppl term : set)
 		{
+			System.out.println("* TgBox.absorbII term "+term);
 			final TermDefinition td = _tbox._Tu.getTD(term);
 			boolean canAbsorb;
 			if (td != null)
@@ -384,14 +388,18 @@ public class TgBox extends TBoxBase
 				ATermAppl conjunct = ATermUtils.makeAnd(setlist);
 				conjunct = ATermUtils.makeNot(conjunct);
 				final ATermAppl sub = ATermUtils.makeSub(term, ATermUtils.nnf(conjunct));
+				System.out.println("* TgBox.absorbII before _tbox._Tu.addDef");
 				_tbox._Tu.addDef(sub);
+				System.out.println("* TgBox.absorbII after _tbox._Tu.addDef");
 
 				_subLogger.fine(() -> "Absorb named: " + ATermUtils.toString(sub));
 
 				_tbox.addAxiomExplanation(sub, _explanation);
 
+				System.out.println("* TgBox.absorbII term "+term+" end (true)");
 				return true;
 			}
+			System.out.println("* TgBox.absorbII term "+term+" go on");
 		}
 
 		return false;
@@ -481,6 +489,7 @@ public class TgBox extends TBoxBase
 
 	private boolean absorbVII(final Set<ATermAppl> set)
 	{
+		System.out.println("TgBox.absorbVII");
 		ATermList list = ATermUtils.makeList(set);
 		final ATermAppl sub = ATermUtils.nnf((ATermAppl) list.getFirst());
 		list = list.getNext();

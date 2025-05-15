@@ -1078,14 +1078,17 @@ public class TBoxImpl implements TBox
 	{
 		if (ATermUtils.isPrimitive(c))
 		{
+			System.out.println("*** TBoxImpl.unfold("+c+") is primitive ");
 			final MultiIterator<Unfolding> result = new MultiIterator<>(_primitiveTbox.unfold(c));
 			result.append(_unaryTbox.unfold(c));
 			result.append(_binaryTbox.unfold(c));
 			return result;
 		}
 		else
-			if (isNot(c))
+			if (isNot(c)) {
+				System.out.println("*** TBoxImpl.unfold("+c+") is NOT primitive but isNot");
 				return _primitiveTbox.unfold(c);
+			}
 			else
 				return IteratorUtils.emptyIterator();
 	}

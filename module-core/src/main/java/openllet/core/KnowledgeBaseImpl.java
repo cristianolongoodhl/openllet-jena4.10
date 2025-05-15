@@ -2632,4 +2632,24 @@ public class KnowledgeBaseImpl implements KnowledgeBase
 	{
 		_explainOnlyInconsistency = explainOnlyInconsistency;
 	}
+
+	public void print(String message){
+		System.out.println("** "+message);
+	}
+
+	public void printRBox(String message){
+		System.out.println("*** RBox "+message);
+		for(final Map.Entry<ATermAppl, Role> r: _rbox.getRoles().entrySet())
+			System.out.println(" * "+r.getKey()+ " -> "+r.getValue());
+	}
+
+	public void printTBox(String message){
+		System.out.println("*** TBox classes "+message);
+		for(final ATermAppl c: getTBox().getAllClasses())
+			System.out.println(" * "+c);
+		System.out.println("*** TBox asserted axioms "+message);
+		for(final ATermAppl c: getTBox().getAssertedAxioms())
+			System.out.println(" * "+c);
+	}
+
 }

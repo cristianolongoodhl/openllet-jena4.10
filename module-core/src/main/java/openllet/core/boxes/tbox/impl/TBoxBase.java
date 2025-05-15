@@ -63,6 +63,7 @@ public class TBoxBase implements Logging
 
 	public boolean addDef(final ATermAppl def)
 	{
+		System.out.println("* TBoxBase.addDef "+def);
 		final ATermAppl name = (ATermAppl) def.getArgument(0);
 		if (_termhash.containsKey(name))
 			getTD(name).addDef(def);
