@@ -9,15 +9,10 @@ options {
 @header{
 package openllet.query.sparqlowl.parser.antlr;
 
-import java.lang.StringBuilder;
-import java.text.CharacterIterator;
-import java.text.StringCharacterIterator;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.jena.datatypes.RDFDatatype;
@@ -27,8 +22,6 @@ import org.apache.jena.graph.Node;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryParseException;
-import org.apache.jena.rdf.model.AnonId;
 import org.apache.jena.sparql.core.Prologue;
 import org.apache.jena.sparql.core.Var;
 import org.apache.jena.sparql.expr.E_Add;
@@ -87,7 +80,7 @@ import static openllet.query.sparqlowl.parser.arq.ARQParserUtilities.isOWL2Datat
 import static openllet.query.sparqlowl.parser.arq.ARQParserUtilities.listToTriples;
 import static openllet.query.sparqlowl.parser.arq.ARQParserUtilities.XSD_BOOLEAN_FALSE;
 import static openllet.query.sparqlowl.parser.arq.ARQParserUtilities.XSD_BOOLEAN_TRUE;
-import static org.apache.jena.sparql.util.ExprUtils.nodeToExpr;
+import static org.apache.jena.sparql.expr.ExprLib.nodeToExpr;
 }
 
 @members{
@@ -157,7 +150,7 @@ objectPropertyIRI
 	:	^(OBJECT_PROPERTY iriRef)
 		{
 			$p = $iriRef.i;
-			$triples = Collections.singleton( new Triple( $p, RDF.Nodes.type, OWL.ObjectProperty.asNode() ) );
+			$triples = Collections.singleton( Triple.create( $p, RDF.Nodes.type, OWL.ObjectProperty.asNode() ) );
 		}
 	;
 
@@ -169,7 +162,7 @@ dataPropertyIRI
 	:	^(DATA_PROPERTY iriRef)
 		{
 			$p = $iriRef.i;
-			$triples = Collections.singleton( new Triple( $p, RDF.Nodes.type, OWL.DatatypeProperty.asNode() ) );
+			$triples = Collections.singleton( Triple.create( $p, RDF.Nodes.type, OWL.DatatypeProperty.asNode() ) );
 		}
 	;
 
@@ -190,7 +183,7 @@ inverseObjectProperty
 		{
 			$p = getAnon( );
 			$triples = new ArrayList<Triple>( $objectPropertyIRI.triples );
-			$triples.add( new Triple( $p, OWL.inverseOf.asNode(), $objectPropertyIRI.p ) );
+			$triples.add( Triple.create( $p, OWL.inverseOf.asNode(), $objectPropertyIRI.p ) );
 		}
 	;
 
@@ -276,20 +269,20 @@ datatypeRestriction
 			{
 				$triples = new ArrayList<Triple>();
 				$n = getAnon( );
-				$triples.add( new Triple( $n, RDF.Nodes.type, RDFS.Datatype.asNode() ) );
-				$triples.add( new Triple( $n, OWL2.onDatatype.asNode(), $datatype.n ) );
+				$triples.add( Triple.create( $n, RDF.Nodes.type, RDFS.Datatype.asNode() ) );
+				$triples.add( Triple.create( $n, OWL2.onDatatype.asNode(), $datatype.n ) );
 				List<Node> facetValues = new ArrayList<Node>();
 			}
 			(	^(FACET_VALUE facet restrictionValue)
 				{
 					Node y = getAnon( );
 					facetValues.add( y );
-					$triples.add( new Triple( y, $facet.n, $restrictionValue.n ) );
+					$triples.add( Triple.create( y, $facet.n, $restrictionValue.n ) );
 				}
 			)+
 			{
 				Node list = listToTriples( facetValues, $triples );
-				$triples.add( new Triple( $n, OWL2.withRestrictions.asNode(), list ) );
+				$triples.add( Triple.create( $n, OWL2.withRestrictions.asNode(), list ) );
 			}
 		)
 	;
@@ -329,7 +322,7 @@ disjunction
 			final Node list = listToTriples( Arrays.asList( $a.n, $b.n ), $triples );
 
 			$n = getAnon( );
-			$triples.add( new Triple( $n, OWL.unionOf.asNode(), list ) );
+			$triples.add( Triple.create( $n, OWL.unionOf.asNode(), list ) );
 
 			$triples.addAll( $a.triples );
 			$triples.addAll( $b.triples );
@@ -361,7 +354,7 @@ conjunction
 			final Node list = listToTriples( Arrays.asList( $a.n, $b.n ), $triples );
 
 			$n = getAnon( );
-			$triples.add( new Triple( $n, OWL.intersectionOf.asNode(), list ) );
+			$triples.add( Triple.create( $n, OWL.intersectionOf.asNode(), list ) );
 
 			$triples.addAll( $a.triples );
 			$triples.addAll( $b.triples );
@@ -381,11 +374,11 @@ primary
 			$triples = new ArrayList<Triple>();
 			$triples.addAll( $disjunction.triples );
 			if ( $disjunction.dr ) {
-				$triples.add( new Triple( $n, OWL2.datatypeComplementOf.asNode(), $disjunction.n ) );
+				$triples.add( Triple.create( $n, OWL2.datatypeComplementOf.asNode(), $disjunction.n ) );
 				$dr = true;
 			}
 			else
-				$triples.add( new Triple( $n, OWL.complementOf.asNode(), $disjunction.n ) );
+				$triples.add( Triple.create( $n, OWL.complementOf.asNode(), $disjunction.n ) );
 		}
 	|	restriction 
 		{
@@ -438,8 +431,8 @@ atomic
 		{
 			Node list = listToTriples( ls, $triples );
 			$n = getAnon( );
-			$triples.add( new Triple( $n, RDF.Nodes.type, RDFS.Datatype.asNode() ) );
-			$triples.add( new Triple( $n, OWL.oneOf.asNode(), list ) );
+			$triples.add( Triple.create( $n, RDF.Nodes.type, RDFS.Datatype.asNode() ) );
+			$triples.add( Triple.create( $n, OWL.oneOf.asNode(), list ) );
 		}
 	|	^(INDIVIDUAL_ENUMERATION
 			{
@@ -451,8 +444,8 @@ atomic
 		{
 			Node list = listToTriples( is, $triples );
 			$n = getAnon( );
-			$triples.add( new Triple( $n, RDF.Nodes.type, OWL.Class.asNode() ) );
-			$triples.add( new Triple( $n, OWL.oneOf.asNode(), list ) );
+			$triples.add( Triple.create( $n, RDF.Nodes.type, OWL.Class.asNode() ) );
+			$triples.add( Triple.create( $n, OWL.oneOf.asNode(), list ) );
 		}
 	;
 
@@ -464,39 +457,39 @@ restriction
 	@init {
 		$n = getAnon( );
 		$triples = new ArrayList<Triple>();
-		$triples.add( new Triple( $n, RDF.Nodes.type, OWL.Restriction.asNode() ) );
+		$triples.add( Triple.create( $n, RDF.Nodes.type, OWL.Restriction.asNode() ) );
 	}
 	:	^(SOME_RESTRICTION propertyExpression disjunction)
 		{
-			$triples.add( new Triple( $n, OWL.onProperty.asNode(), $propertyExpression.p ) );
-			$triples.add( new Triple( $n, OWL.someValuesFrom.asNode(), $disjunction.n ) );
+			$triples.add( Triple.create( $n, OWL.onProperty.asNode(), $propertyExpression.p ) );
+			$triples.add( Triple.create( $n, OWL.someValuesFrom.asNode(), $disjunction.n ) );
 			$triples.addAll( $propertyExpression.triples );
 			$triples.addAll( $disjunction.triples );
 		}
 	|	^(ALL_RESTRICTION propertyExpression disjunction)
 		{
-			$triples.add( new Triple( $n, OWL.onProperty.asNode(), $propertyExpression.p ) );
-			$triples.add( new Triple( $n, OWL.allValuesFrom.asNode(), $disjunction.n ) );
+			$triples.add( Triple.create( $n, OWL.onProperty.asNode(), $propertyExpression.p ) );
+			$triples.add( Triple.create( $n, OWL.allValuesFrom.asNode(), $disjunction.n ) );
 			$triples.addAll( $propertyExpression.triples );
 			$triples.addAll( $disjunction.triples );
 		}
 	|	^(VALUE_RESTRICTION objectPropertyExpression individual)
 		{
-			$triples.add( new Triple( $n, OWL.onProperty.asNode(), $objectPropertyExpression.p ) );
-			$triples.add( new Triple( $n, OWL.hasValue.asNode(), $individual.i ) );
+			$triples.add( Triple.create( $n, OWL.onProperty.asNode(), $objectPropertyExpression.p ) );
+			$triples.add( Triple.create( $n, OWL.hasValue.asNode(), $individual.i ) );
 			$triples.addAll( $objectPropertyExpression.triples );
 			$triples.addAll( $individual.triples );
 		}
 	|	^(VALUE_RESTRICTION dataPropertyIRI literal)
 		{
-			$triples.add( new Triple( $n, OWL.onProperty.asNode(), $dataPropertyIRI.p ) );
-			$triples.add( new Triple( $n, OWL.hasValue.asNode(), $literal.l ) );
+			$triples.add( Triple.create( $n, OWL.onProperty.asNode(), $dataPropertyIRI.p ) );
+			$triples.add( Triple.create( $n, OWL.hasValue.asNode(), $literal.l ) );
 			$triples.addAll( $dataPropertyIRI.triples );
 		}
 	|	^(SELF_RESTRICTION objectPropertyExpression)
 		{
-			$triples.add( new Triple( $n, OWL.onProperty.asNode(), $objectPropertyExpression.p ) );
-			$triples.add( new Triple( $n, OWL2.hasSelf.asNode(), XSD_BOOLEAN_TRUE ) );
+			$triples.add( Triple.create( $n, OWL.onProperty.asNode(), $objectPropertyExpression.p ) );
+			$triples.add( Triple.create( $n, OWL2.hasSelf.asNode(), XSD_BOOLEAN_TRUE ) );
 			$triples.addAll( $objectPropertyExpression.triples );
 		}
 	|	^(MIN_NUMBER_RESTRICTION propertyExpression i=INTEGER
@@ -513,12 +506,12 @@ restriction
 		{
 			Node num = createNonNegativeInteger( $i.text );
 			
-			$triples.add( new Triple( $n, OWL.onProperty.asNode(), $propertyExpression.p ) );
+			$triples.add( Triple.create( $n, OWL.onProperty.asNode(), $propertyExpression.p ) );
 			if ( q == null )
-				$triples.add( new Triple( $n, OWL.minCardinality.asNode(), num ) );
+				$triples.add( Triple.create( $n, OWL.minCardinality.asNode(), num ) );
 			else {
-				$triples.add( new Triple( $n, OWL2.minQualifiedCardinality.asNode(), num ) );
-				$triples.add( new Triple( $n, dr
+				$triples.add( Triple.create( $n, OWL2.minQualifiedCardinality.asNode(), num ) );
+				$triples.add( Triple.create( $n, dr
 					? OWL2.onDataRange.asNode()
 					: OWL2.onClass.asNode(), q ) );
 			}
@@ -540,12 +533,12 @@ restriction
 		{
 			Node num = createNonNegativeInteger( $i.text );
 			
-			$triples.add( new Triple( $n, OWL.onProperty.asNode(), $propertyExpression.p ) );
+			$triples.add( Triple.create( $n, OWL.onProperty.asNode(), $propertyExpression.p ) );
 			if ( q == null )
-				$triples.add( new Triple( $n, OWL.maxCardinality.asNode(), num ) );
+				$triples.add( Triple.create( $n, OWL.maxCardinality.asNode(), num ) );
 			else {
-				$triples.add( new Triple( $n, OWL2.maxQualifiedCardinality.asNode(), num ) );
-				$triples.add( new Triple( $n, dr
+				$triples.add( Triple.create( $n, OWL2.maxQualifiedCardinality.asNode(), num ) );
+				$triples.add( Triple.create( $n, dr
 					? OWL2.onDataRange.asNode()
 					: OWL2.onClass.asNode(), q ) );
 			}
@@ -567,12 +560,12 @@ restriction
 		{
 			Node num = createNonNegativeInteger( $i.text );
 			
-			$triples.add( new Triple( $n, OWL.onProperty.asNode(), $propertyExpression.p ) );
+			$triples.add( Triple.create( $n, OWL.onProperty.asNode(), $propertyExpression.p ) );
 			if ( q == null )
-				$triples.add( new Triple( $n, OWL.cardinality.asNode(), num ) );
+				$triples.add( Triple.create( $n, OWL.cardinality.asNode(), num ) );
 			else {
-				$triples.add( new Triple( $n, OWL2.qualifiedCardinality.asNode(), num ) );
-				$triples.add( new Triple( $n, dr
+				$triples.add( Triple.create( $n, OWL2.qualifiedCardinality.asNode(), num ) );
+				$triples.add( Triple.create( $n, dr
 					? OWL2.onDataRange.asNode()
 					: OWL2.onClass.asNode(), q ) );
 			}
@@ -941,7 +934,7 @@ argList
 constructTemplate
 	returns [Template t]
 	@init {
-		TripleCollectorBGP tg = new TripleCollectorBGP();
+		TripleCollectorBGP tg = new TripleCollectorBGP();;
 		this.inConstructTemplate = true;
 	}
 	:	^(CONSTRUCT_TEMPLATE constructTriples[tg]?)
@@ -983,7 +976,7 @@ triplesSameSubject[TripleCollector e]
 					if (map != null)
 						for ( Map.Entry<Node,List<Node>> pair : map.entrySet() ) {
 							for ( Node o : pair.getValue() )
-								$e.addTriple( new Triple( s, pair.getKey(), o ) );
+								$e.addTriple( Triple.create( s, pair.getKey(), o ) );
 						}
 					for ( Triple t : $m.triples )
 						$e.addTriple( t );
@@ -1000,7 +993,7 @@ triplesSameSubject[TripleCollector e]
 							if (map != null)
 							for ( Map.Entry<Node,List<Node>> pair : map.entrySet() ) {
 								for ( Node o : pair.getValue() )
-									$e.addTriple( new Triple( s, pair.getKey(), o ) );
+									$e.addTriple( Triple.create( s, pair.getKey(), o ) );
 							}
 							for ( Triple t : $m.triples )
 								$e.addTriple( t );
@@ -1103,7 +1096,7 @@ blankNodePropertyList
 			if (map != null)
 				for ( Map.Entry<Node,List<Node>> pair : map.entrySet() ) {
 					for ( Node o : pair.getValue() )
-						$triples.add( new Triple( $n, pair.getKey(), o ) );
+						$triples.add( Triple.create( $n, pair.getKey(), o ) );
 				}
 			$triples.addAll( $m.triples );
 		}

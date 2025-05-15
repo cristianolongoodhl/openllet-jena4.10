@@ -12,10 +12,13 @@ import static openllet.OpenlletCmdOptionArg.NONE;
 import static openllet.OpenlletCmdOptionArg.REQUIRED;
 
 import java.io.StringWriter;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.google.common.base.Charsets;
+import org.apache.commons.io.IOUtils;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.query.Query;
@@ -42,6 +45,7 @@ import openllet.jena.NodeFormatter;
 import openllet.query.sparqldl.jena.SparqlDLExecutionFactory;
 import openllet.query.sparqldl.jena.SparqlDLExecutionFactory.QueryEngineType;
 import openllet.query.sparqlowl.parser.arq.ARQTerpParser;
+import org.eclipse.rdf4j.common.io.IOUtil;
 
 /**
  * <p>
