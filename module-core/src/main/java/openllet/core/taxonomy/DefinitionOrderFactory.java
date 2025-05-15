@@ -8,6 +8,8 @@ package openllet.core.taxonomy;
 
 import static openllet.core.OpenlletOptions.OrderedClassification.DISABLED;
 import static openllet.core.OpenlletOptions.OrderedClassification.ENABLED_LEGACY_ORDERING;
+import static openllet.core.OpenlletOptions.OrderedClassification.ENABLED_STRING_ORDERING;
+
 
 import java.util.Comparator;
 
@@ -25,7 +27,9 @@ public class DefinitionOrderFactory
 {
 	public static DefinitionOrder createDefinitionOrder(final KnowledgeBase kb)
 	{
-		final Comparator<ATerm> comparator = OpenlletOptions.ORDERED_CLASSIFICATION != DISABLED ? Comparators.termComparator : null;
+		final Comparator<ATerm> comparator = OpenlletOptions.ORDERED_CLASSIFICATION != DISABLED ?
+				(OpenlletOptions.ORDERED_CLASSIFICATION != ENABLED_STRING_ORDERING ? Comparators.termComparator : Comparators.termByStringComparator )
+					: null;
 
 		return OpenlletOptions.ORDERED_CLASSIFICATION == ENABLED_LEGACY_ORDERING ? //
 				new TaxonomyBasedDefinitionOrder(kb, comparator) : //

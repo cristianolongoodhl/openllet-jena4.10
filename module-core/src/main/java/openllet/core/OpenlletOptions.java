@@ -408,8 +408,9 @@ public class OpenlletOptions
 	 * reason to choose between two classes. In these cases, the reasoner can use a deterministic algorithm to choose which of the classes to process first.
 	 * This option ensures that the reasoner will use same ordering at every run. Disabling this option means the classifier will break ties randomly which
 	 * might result in different classification times.
+	 * TODO Here we prefer string comparison in light of <a href="https://github.com/cristianolongoodhl/openllet-jena4.10/issues/1">Issue #1</a>, however comparison by has would be more efficient
 	 */
-	public static OrderedClassification ORDERED_CLASSIFICATION = OrderedClassification.ENABLED;
+	public static OrderedClassification ORDERED_CLASSIFICATION = OrderedClassification.ENABLED_STRING_ORDERING; //ENABLED;
 
 	/**
 	 * Do not use EL Classifier, even if the ontology is EL
@@ -518,7 +519,9 @@ public class OpenlletOptions
 
 	public enum OrderedClassification
 	{
-		DISABLED, ENABLED, ENABLED_LEGACY_ORDERING
+		DISABLED, ENABLED, ENABLED_LEGACY_ORDERING,
+		//terms are compared by strings, it is less efficient but gives us a stable ordering over different runs
+		ENABLED_STRING_ORDERING
 	}
 
 	/**

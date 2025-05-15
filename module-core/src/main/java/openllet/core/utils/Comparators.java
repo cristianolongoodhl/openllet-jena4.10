@@ -39,6 +39,8 @@ public class Comparators
 					return o1.toString().compareTo(o2.toString());
 	};
 
+	public static final Comparator<ATerm> termByStringComparator = (o1, o2) -> o1.toString().compareTo(o2.toString());
+
 	public static final Comparator<Number> numberComparator = NumberUtils::compare;
 
 	public static final Comparator<Object> stringComparator = (o1, o2) -> o1.toString().compareTo(o2.toString());
