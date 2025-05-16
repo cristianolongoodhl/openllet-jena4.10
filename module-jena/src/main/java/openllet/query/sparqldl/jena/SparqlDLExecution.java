@@ -23,17 +23,7 @@ import org.apache.jena.atlas.lib.NotImplemented;
 import org.apache.jena.graph.Graph;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Triple;
-import org.apache.jena.query.Dataset;
-import org.apache.jena.query.DatasetFactory;
-import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryException;
-import org.apache.jena.query.QueryExecException;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QueryFactory;
-import org.apache.jena.query.QuerySolution;
-import org.apache.jena.query.ResultSet;
-import org.apache.jena.query.SortCondition;
+import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Statement;
@@ -137,6 +127,15 @@ class SparqlDLExecution implements QueryExecution
 	}
 
 	/**
+	 * Create a query execution
+	 * @return a builder for query execution
+	 */
+	private QueryExecution getQueryExecution(){
+		final QueryExecutionDatasetBuilder queryBuilder=QueryExecution.dataset(_source).query(_query);
+		return (_initialBinding==null ? queryBuilder: queryBuilder.substitution(_initialBinding)).build();
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -147,8 +146,7 @@ class SparqlDLExecution implements QueryExecution
 		final ResultSet results = exec();
 
 		if (results == null)
-			try (final var query = QueryExecutionFactory.create(_query, _source, _initialBinding))
-			{
+			try (final var query = getQueryExecution()) {
 				query.execConstruct(model);
 			}
 		else
@@ -213,7 +211,7 @@ class SparqlDLExecution implements QueryExecution
 		if (null != results)
 			return results.hasNext();
 		else
-			try (final var query = QueryExecutionFactory.create(_query, _source, _initialBinding))
+			try (final var query = getQueryExecution())
 			{
 				return query.execAsk();
 			}
@@ -229,7 +227,7 @@ class SparqlDLExecution implements QueryExecution
 		ensureQueryType(QueryType.SELECT);
 		final ResultSet results = exec();
 
-		return results != null ? results : QueryExecutionFactory.create(_query, _source, _initialBinding).execSelect(); // How the user close the query ?
+		return results != null ? results : getQueryExecution().execSelect(); // How the user close the query ?
 	}
 
 	/**

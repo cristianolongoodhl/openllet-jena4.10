@@ -138,9 +138,9 @@ public class JenaUtils
 		if (datatype.equals(ATermUtils.PLAIN_LITERAL_DATATYPE))
 		{
 			if (lang.equals(ATermUtils.EMPTY))
-				node = NodeFactory.createLiteral(lexicalValue);
+				node = NodeFactory.createLiteralString(lexicalValue);
 			else
-				node = NodeFactory.createLiteral(lexicalValue, lang.getName());
+				node = NodeFactory.createLiteralLang(lexicalValue, lang.getName());
 		}
 		else
 			if (datatype.equals(Datatypes.XML_LITERAL))
