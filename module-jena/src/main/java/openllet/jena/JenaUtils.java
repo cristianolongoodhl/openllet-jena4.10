@@ -39,7 +39,6 @@ import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.TypeMapper;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.datatypes.xsd.impl.XMLLiteralType;
-import org.apache.jena.graph.BlankNodeId;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.graph.impl.LiteralLabel;
@@ -158,7 +157,7 @@ public class JenaUtils
 	static public Node makeGraphResource(final ATermAppl term)
 	{
 		if (ATermUtils.isBnode(term))
-			return NodeFactory.createBlankNode(new BlankNodeId(((ATermAppl) term.getArgument(0)).getName()));
+			return NodeFactory.createBlankNode(((ATermAppl) term.getArgument(0)).getName());
 		else
 			if (term.equals(ATermUtils.TOP))
 				return OWL.Thing.asNode();
