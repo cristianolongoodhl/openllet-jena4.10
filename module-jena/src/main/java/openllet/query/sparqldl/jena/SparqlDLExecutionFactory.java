@@ -150,7 +150,7 @@ public class SparqlDLExecutionFactory
 	{
 		QueryExecutionDatasetBuilder queryExecutionDatasetBuilder = QueryExecutionDatasetBuilder.create().dataset(dataset).query(query);
 		QueryExecutionDatasetBuilder queryExecutionDatasetBuilderWithInitial = initialBinding==null ? queryExecutionDatasetBuilder :
-				queryExecutionDatasetBuilder.initialBinding(initialBinding);
+				queryExecutionDatasetBuilder.substitution(initialBinding);
 		// the engine we will return
 		QueryExecution queryExec = null;
 
