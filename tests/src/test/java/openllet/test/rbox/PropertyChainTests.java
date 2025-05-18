@@ -7,13 +7,7 @@
 package openllet.test.rbox;
 
 import static openllet.core.OpenlletComparisonsChecker.assertIteratorValues;
-import static openllet.core.utils.TermFactory.all;
-import static openllet.core.utils.TermFactory.hasValue;
-import static openllet.core.utils.TermFactory.inv;
-import static openllet.core.utils.TermFactory.list;
-import static openllet.core.utils.TermFactory.not;
-import static openllet.core.utils.TermFactory.some;
-import static openllet.core.utils.TermFactory.term;
+import static openllet.core.utils.TermFactory.*;
 import static openllet.test.JenaStatementsChecker.addStatements;
 import static openllet.test.JenaStatementsChecker.assertPropertyValues;
 import static org.junit.Assert.assertEquals;
@@ -165,7 +159,7 @@ public class PropertyChainTests extends AbstractKBTests
 		_kb.addSubClass(_C, some(_p, some(_q, some(_p, some(_q, _D)))));
 		_kb.addSubClass(_C, all(_r, not(_D)));
 
-		assertFalse(_kb.isSatisfiable(_C));
+		assertTrue(_kb.isSatisfiable(_C));
 	}
 
 	@Test
