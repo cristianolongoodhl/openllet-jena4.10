@@ -1376,7 +1376,7 @@ rdfLiteral
 	:	^(LITERAL_PLAIN string)
 		{ $l = NodeFactory.createLiteral( $string.s ); }
 	| ^(LITERAL_LANG string lang=LANGTAG)
-		{ $l = NodeFactory.createLiteral( $string.s, $lang.text, false ); }
+		{ $l = NodeFactory.createLiteralLang( $string.s, $lang.text); }
 	|	^(LITERAL_TYPED string iriRef)
 		{
 			RDFDatatype dType = TypeMapper.getInstance().getSafeTypeByName( $iriRef.i.getURI() );

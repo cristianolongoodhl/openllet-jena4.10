@@ -144,7 +144,7 @@ public class JenaUtils
 		}
 		else
 			if (datatype.equals(Datatypes.XML_LITERAL))
-				node = NodeFactory.createLiteral(lexicalValue, "", XMLLiteralType.theXMLLiteralType);
+				node = NodeFactory.createLiteral(lexicalValue, "", XMLLiteralType.rdfXMLLiteral);
 			else
 			{
 				final RDFDatatype type = TypeMapper.getInstance().getTypeByName(datatype.getName());
